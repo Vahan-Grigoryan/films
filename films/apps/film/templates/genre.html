@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<head>
+    {% load static %}
+    <title>FIIMS</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'base.css/' %}" />
+    <link rel="stylesheet" href="{% static 'genre.css/' %}">
+    <script src="https://kit.fontawesome.com/12ab011246.js" crossorigin="anonymous"></script>
+</head>
+    
+{% endblock %}
+
+{% block genres %}
+
+<div class="categories">
+    <h1>Genre</h1>
+    <span><a href="/">All</a></span><br>
+    {% for G in Genre %}
+    <span class="categorie"><a href="{% url 'film:get_genre' G.id %}">{{G.genre}}</a></span><br>
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+{% for f in Film %}
+<a href='{% url "film:get_film" f.id %}' style="width: 250px">
+<div class="film">
+
+    <img height="80%" width="100%" src="{{f.img.url}}" alt="image">
+    
+    <h2>{{f.name}}</h2>
+    <div class="mini-about-film-box">
+        <span>rating {{f.rating}}, </span>
+        <span>{{f.view}} views</span>
+    </div>
+
+</div>
+</a>
+{% endfor %}
+
+{% endblock %}

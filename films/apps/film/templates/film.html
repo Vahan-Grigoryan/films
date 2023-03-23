@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+<head>
+    {% load static %}
+    {% load embed_video_tags %}
+    <title>FIIMS</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'base.css/' %}" />
+    <link rel="stylesheet" href="{% static 'genre.css/' %}">
+    <link rel="stylesheet" href="{% static 'film.css/' %}">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/12ab011246.js" crossorigin="anonymous"></script>
+
+</head>
+    
+{% endblock %}
+
+{% block genres %}
+
+<div class="categories">
+    <h1>Genre</h1>
+    <span><a href="/">All</a></span><br>
+    {% for G in Genre %}
+    <span class="categorie"><a href="{% url 'film:get_genre' G.id %}">{{G.genre}}</a></span><br>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+
+{% block content %}
+<div style="margin-bottom: 10px;width: 100%;height: 70vh;">
+<img height="100%" width="40%" align='left' src="{{Film.img.url}}" style="margin-right: 2%;" alt="sorry">
+    
+
+
+    
+<h2>{{Film.name}}</h2><br>
+<span>{{Film.producer}}</span><br><br>
+<span>rating {{Film.rating}} </span><br><br>
+<big>{{Film.warning_age}}+</big><br><br>
+<span>{{Film.view}} views</span><br><br>
+
+<!-- Actors -->
+{% if Film.actor_set.count is not 0 %}
+    {% for a in Film.actor_set.all %}
+        <span class="actor-preview" data-img="{{a.img.url}}">
+            {{a.name}}
+        </span>
+
+    {% endfor %}
+    <br><br>
+{% endif %}
+
+<span>
+        {% if user.is_authenticated %}
+        <a href="{% url 'film:liked_films' Film.id %}"><i style="font-size:20px;margin-right:10px" class="far fa-thumbs-up"></i></a>
+        or
+        <a href=""><i style="font-size:20px;margin-left:10px" class="far fa-thumbs-down"></i></a>
+        {% endif %}
+</span>
+
+
+</div>
+
+<p style="font-weight: normal;line-height: 20px">Film created at {{Film.ceated_at|date:'Y.m.d'}} <br><br>{{Film.description}}</p>
+
+
+{% if Film.video %}
+    <div style="width:100%">
+        {% video Film.video '850x400' %}
+    </div>
+{% elif Film.path_video %}
+    <div style="width:100%">
+        <video src="{{ Film.path_video.url }}" controls width="100%" ></video>
+    </div>
+{% endif %}
+
+{% if Film.filmshots_set.count is not 0 %}
+<h3>Film shots</h3>
+<div style="width:100%;height:300px;display:flex">
+
+    {% for I in Film.filmshots_set.all %}
+        <img src="{{I.img.url}}" alt="image does not loading" width="33%" height="100%" style="margin-right:0.3%">
+    {% endfor %}
+
+</div>
+{% endif %}
+
+
+    <br><br><br><br>
+    <div class="reviews-main-box">
+        {% if Film.review_set.count is not 0 %}
+        <big>Reviews ( {{Film.review_set.count}} )</big>
+        {% endif %}
+        {% for F in Film.review_set.all %}
+
+            <div class="review-and-answers-box">
+                <div class="review-box">
+
+                    <h1>{{F.review_author}}</h1>
+                    <span>{{F.review_text}}</span><br><br>
+                    <a href="#reviewform"><button class="answer" onclick="answer( `{{F.review_text}}`, `{{F.id}}`)">To answer</button></a>
+
+                </div>
+                <br><br>
+
+                {% if F.answer_set.count is not 0 %}
+                <big style="margin-left:5%">Answers ( {{F.answer_set.count}} )</big>
+                {% endif %}
+
+                {% for A in F.answer_set.all %}
+
+                <div class="answer-box">
+                    <h2>{{A.answer_author}}</h2>
+                    <span>{{A.answer_text}}</span><br><br>
+
+
+                </div>
+                {% endfor %}
+            </div>
+
+        {% endfor %}
+{% if user.is_authenticated %}
+        <form class="review-form" action="" method="POST" id="reviewform">
+
+            {% csrf_token %}
+            <h1>Reviews</h1>
+            <textarea type="text" name="review-text" cols="40" rows="7"></textarea><br>
+            <input type="hidden" name="review-id" id="review-id">
+            <button type="submit" id="btn-submit">Give feedback</button>
+
+        </form>
+    </div>
+
+    <script>
+        function answer(name, id){
+            $('textarea').val(name)
+            $('#review-id').val(id)
+            $('#btn-submit').html('To answer')
+        }
+
+    </script>
+
+
+{% endif %}
+
+{% endblock %}
+

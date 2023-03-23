@@ -1,0 +1,14 @@
+.film{
+    background: #000;
+    color:white;
+    font-weight: 600;
+    padding: 3%;
+    width: 250px;
+    height: 500px;
+    cursor: pointer;
+
+}
+.mini-about-film-box{
+    color:white;
+    border:none
+}

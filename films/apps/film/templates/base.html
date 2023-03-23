@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+{% block head %}
+<head>
+
+    {% load static %}
+    
+    <title>FIIMS</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css">-->
+    <link rel="stylesheet" type="text/css" media="screen" href="{% static 'base.css/' %}" />
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.js"></script>-->
+    <script src="https://kit.fontawesome.com/12ab011246.js" crossorigin="anonymous"></script>
+
+</head>
+{% endblock %}
+
+<body>
+    <header>
+        <video src="{% static 'trailer.mp4' %}" autoplay muted loop style="position: absolute;left:0px;top:0px;height: 100%;width: 100%;transform:scaleX(1.2)"></video>
+        <div class="top-main-box">
+            <!--style="position: absolute;left:0px;top:0px;height: 100%;width: 100%;"-->
+            
+            <div class="logo-name">
+                <h2 class="animate__animated animate__flip">DjangoMovie</h2>
+            </div>
+
+            <form class="search-form" method="POST" action="{% url 'film:films_by_search' %}">
+                {% csrf_token %}
+                    <input type="search" name="search" class="search">
+
+                    <button type="submit" class="search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+
+            </form>
+
+            <div class="register-login-box">
+                {% if user.is_authenticated %}
+                    Welcome <span style="color:aqua;font-size:20px;margin:0px 5px"> {{ user.username }} </span>
+                    <span class="hov"><a href="{% url 'film:profile' %}">Profile</a></span>
+                    <span class="hov"><a href="{% url 'film:logout'  %}">logout</a></span>
+                {% else %}
+                    <span class="hov"><a href="{% url 'film:register' %}">register</a></span>
+                    <span class="hov"><a href="{% url 'film:login' %}"> login</a></span>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </header>
+
+    <div class="films-in-categories" >
+        {% block genres %}
+        <div class="categories">
+            <h1>Genre</h1>
+            <span><a href="/">All</a></span><br>
+            {% for g in Genre %}
+            <span class="categorie"><a href="{% url 'film:get_genre' g.id %}">{{g.genre}}</a></span><br>
+            {% endfor %}
+        </div>
+        {% endblock %}
+
+        
+        <div class="films-by-categories ">
+            
+            
+            {% block content %}
+            {% for F in Film %}
+            <a href="{% url 'film:get_film' F.id %}" style="width:250px;height:450px">
+            <div class="film wow pulse">
+
+                    {% if F.img %}
+                        <img width="100%" height="70%" src="{{F.img.url}}" alt="sorry" >
+                    {% endif %}
+                    <div class="mini-about-film-box">
+                        <h2>{{F.name}}</h2>
+                        <span> rating {{F.rating}}, </span> <span> views {{F.view}}</span>
+                    </div>
+
+            </div>
+            </a>
+            {% endfor %}
+            {% endblock %}
+
+            
+            
+        </div>
+
+    </div>
+    <script>
+        new WOW().init()
+        $('.hov').hover(function() {
+            $(this).addClass('animate__animated animate__shakeX')
+            setTimeout(function(){
+                $('.hov').removeClass('animate__animated animate__shakeX')
+            }, 1000);
+        })
+        
+        </script>
+</body>
+</html>

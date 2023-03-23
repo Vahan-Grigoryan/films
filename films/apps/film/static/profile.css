@@ -1,0 +1,112 @@
+body{
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    background: rgb(228, 77, 77);
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
+    display:block
+}
+.film-create-form {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    jactify-content:center;
+    position:relative
+}
+.profile-info{
+    background:linear-gradient(45deg, orange, blueviolet) 
+}
+.film-create-form-inputs{
+    color: darkslategray;
+    width: 90%;
+    font-size: 18px;
+    padding: 5px 3px;
+    border-radius: 4px;
+    border: 1px solid yellowgreen;
+    box-shadow: 3px 3px 10px;
+}
+.film-create-form-inputs:focus{
+    border: 2px solid rebeccapurple;
+}
+button{
+    padding: 5px 30px;
+    border: none;
+    border-radius: 4px;
+    border: 2px solid teal;
+    background:transparent;
+    font-size: 18px;
+    color: yellow;
+    cursor: pointer;
+    border-radius:20px
+}
+.desc-form{
+    width:30%;
+    display:none
+}
+.desc-textarea{
+    width: 100%;
+    height: 100px;
+    border: 2px solid #00ff40;
+    border-right: none;
+    border-top: none;
+    box-shadow: 5px 5px 10px rebeccapurple;
+    font-size:17px
+}
+.desc-button{
+    margin: 10px 0px;
+    padding: 5px 15px;
+    background: #00ff40;
+    border-radius: 7px;
+    color: black;
+    width: 100%;
+    box-shadow: 5px 5px 10px rebeccapurple;
+}
+label{
+    font-size: 18px;
+    padding: 10px 40px;
+    color: chartreuse;
+    cursor: pointer;
+    border: 2px solid yellow;
+    border-radius: 30px;
+    margin: 0px auto;
+}
+label:hover{
+    animation:scale 0.7s linear
+}
+.img-box{
+    width: 30%;
+    height: 100%;
+    text-align: center;
+}
+.content{
+    width: calc(100% - 40px);
+    padding: 20px;
+}
+.info-box{
+    width: 70%;
+    height: 100%;
+}
+.user-created-films{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap:30px 0px
+}
+
+.user-liked-films{
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap:30px 0px;
+    
+}
+
+@keyframes scale{
+    50%{
+        transform:scale(1.2)
+    }
+    100%{
+        transform:scale(1)
+    }
+
+}

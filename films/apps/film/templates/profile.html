@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load embed_video_tags %}
+    <meta charset="UTF-8">
+    <title>PROFILE</title>
+    <link rel="stylesheet" href="{% static 'profile.css' %}">
+
+    
+</head>
+
+<body>
+
+
+<div class="profile-info">
+
+    <div style="display: flex;">
+
+        {% if userphoto.photo %}
+        <div class="img-box">
+            <img style="border-radius: 50%;margin-top:10%;box-shadow: 5px 5px 10px rgb(47, 122, 110);" src="{{ userphoto.photo.url }}" alt="" width="50%" height="50%">
+        </div>
+        {% else %}
+
+        <div class="img-box" style="margin:auto">
+            <br>
+
+            <form action="" method="post" enctype="multipart/form-data" style="margin-top:10px;">
+                {% csrf_token %}
+
+                
+                <label for="file" class="file">upload image</label><br><br>
+
+                <input type="file" id="file" name="profile-image" style="display: none;"><br>
+                <button>Upload</button>
+            </form>
+
+        </div>
+
+        {% endif %}
+        
+        <div class="info-box">
+    
+            <h1>{{user.username}}</h1>
+            <h4>email: {{user.email}}</h4>
+
+            {% if desc.description %}
+            <p>description: <br><br>{{desc.description}}</p>
+            {% else %}
+            <span id="write-desc" style="cursor:pointer"><big>+<b> add description</b></big></span>
+
+            <form class="desc-form" method="post">
+                {% csrf_token %}
+                <textarea class="desc-textarea" name="desc-text"></textarea><br>
+                <button class="desc-button">Add</button>
+            </form>
+
+            {% endif %}
+
+        </div>
+    </div>
+    <br>
+    <div class="content">
+        <h2>Created films ({{ user.usercreatedfilms_set.count }})</h2>
+        <div class="user-created-films">
+            {% for ufilms in user.usercreatedfilms_set.all %}
+
+                {% if ufilms.films.video %}
+                    {% video ufilms.films.video '300x200' %}
+
+                {% elif ufilms.films.path_video %}
+                    <video src="{{ ufilms.films.path_video.url }}" controls width="300px" height="200px"></video>
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+        <br><br>
+        <h2>Liked films ({{ user.likedfilms_set.count }})</h2>
+
+        <div class="user-liked-films">
+            {% for like in user.likedfilms_set.all %}
+                {% video like.films.video '370x200' %}
+            {% endfor %}
+        </div>
+    </div>
+
+</div>
+
+<h1 style="text-align:center">Create film and be creature!</h1>
+<form action="{% url 'film:create_film' %}" method="post" class="film-create-form" enctype="multipart/form-data">
+    {% csrf_token %}
+
+
+    <div style="width:33%;text-align:center">
+        <input type="text" class="film-create-form-inputs" placeholder="name" name="name"><br><br><br><br>
+        <input type="text" class="film-create-form-inputs" placeholder="produser name" name="produser"><br><br><br><br>
+        <input type="number" class="film-create-form-inputs" placeholder="rating" name="rating">
+    </div>
+
+    <div style="width:33%;text-align:center">
+        <input type="number" class="film-create-form-inputs" placeholder="warning age" name="warning_age"><br><br><br><br>
+        <input type="text" class="film-create-form-inputs" placeholder="genre" name="genre"><br><br><br>
+        <textarea class="film-create-form-inputs" rows="5" placeholder="description" name="desc"></textarea><br><br><br>
+
+    </div>
+
+    <div style="width:33%;text-align:center">
+        <p><big>Select film preview</big></p>
+        <input type="file" id="film-img-file" name="img" style="display:none">
+        <label for="film-img-file" class="file">upload preview</label><br><br>
+
+        <p><big>Select film video</big></p>
+        <input type="file" id="film-img-video" name="path_video" style="display:none">
+        <label for="film-img-video" class="file-video">upload video</label>
+
+    </div>
+
+    <button style="position: a;position: absolute;left: calc(50% - 75px);bottom: 3%;">CREATE!</button>
+
+</form>
+
+<script>
+    if (document.querySelector('#file') != null){
+    document.querySelector('#file').addEventListener('change', function(e){
+        document.querySelector('.file').innerText=`Selected image is ${e.target.files[0].name}`
+        document.querySelector('.file').style.padding='10px'
+        document.querySelector('.file').style.color='violet'
+    })}
+
+    if (document.querySelector('#film-img-file') != null){
+    document.querySelector('#film-img-file').addEventListener('change', function(e){
+        document.querySelector('.file').innerText=`Selected image is ${e.target.files[0].name}`
+        document.querySelector('.file').style.padding='10px'
+        document.querySelector('.file').style.color='violet'
+    })}
+
+    if (document.querySelector('#film-img-video') != null){
+    document.querySelector('#film-img-video').addEventListener('change', function(e){
+        document.querySelector('.file-video').innerText=`Selected video is ${e.target.files[0].name}`
+        document.querySelector('.file-video').style.padding='10px'
+        document.querySelector('.file-video').style.color='violet'
+    })}
+
+    document.querySelector('#write-desc').onclick=function(){
+        let descForm = document.querySelector('.desc-form')
+
+        this.style.display='none'
+        descForm.style.display='block'
+    }
+
+</script>
+
+</body>
+</html>
